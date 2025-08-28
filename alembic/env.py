@@ -1,12 +1,19 @@
+import sys
+import os
 from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import create_engine, pool
 
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from app.core.config import settings
 from app.db.base import Base
 
-# IMPORTANT: importez vos modèles ici quand vous les créez, ex:
-# from app.models import client, technician, intervention, event  # noqa: F401
+from app.models.client import Client  # noqa: F401
+from app.models.technician import Technician  # noqa: F401
+from app.models.intervention import Intervention  # noqa: F401
+from app.models.event import Event  # noqa: F401
+from app.models.user import User  # noqa: F401
 
 config = context.config
 

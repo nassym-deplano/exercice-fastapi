@@ -1,4 +1,4 @@
-.PHONY: dev init-db revise test init-db-lite
+.PHONY: dev init-db revise test test-smoke test-business init-db-lite
 
 dev:
 	python -m uvicorn app.main:app --reload
@@ -15,6 +15,14 @@ init-db:
 init-db-lite:
 	python -m scripts.init_db
 
-# Tests
+# Run smoke tests only
+test-smoke:
+	pytest tests/test_smoke.py -v
+
+# Run business tests only
+test-business:
+	pytest tests/test_business.py -v
+
+# Run all tests
 test:
-	pytest -q
+	pytest -v
