@@ -13,9 +13,6 @@ engine = _make_engine(settings.DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 def get_db():
-    """Dépendance FastAPI pour une session DB.
-    TODO: utilisez-la dans vos routes une fois la persistance implémentée.
-    """
     db = SessionLocal()
     try:
         yield db

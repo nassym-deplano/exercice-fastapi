@@ -1,18 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.api.deps import get_org_id
+from fastapi import APIRouter, Depends, status
+from sqlalchemy.orm import Session
+from typing import List
+from uuid import UUID
+from app.schemas.event import EventCreate, EventRead
+from app.services.event import EventService
+from app.api.deps import get_current_user
+from app.db.session import get_db
+
 
 router = APIRouter(prefix="/interventions/{intervention_id}/events", tags=["events"])
 
-@router.post("", status_code=status.HTTP_201_CREATED)
-def create_event(intervention_id: int, org: str = Depends(get_org_id)):
-    """Ajouter un évènement à la timeline d'un intervention.
-    TODO: types d'évènements (enum libre), payload (note, JSON...), vérifier intervention ∈ org, insert + horodatage.
-    """
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Implement create_event")
+@router.post("", response_model=EventRead, status_code=status.HTTP_201_CREATED)
+def create_event(
+    data: EventCreate, 
+    db: Session = Depends(get_db),
+    current: dict = Depends(get_current_user)
+):
+    org = current["org"]
+    return EventService.create_event(db, data, org)
 
-@router.get("")
-def list_events(intervention_id: int, org: str = Depends(get_org_id)):
-    """Lister la timeline d'un intervention (ordre chronologique).
-    TODO: SELECT events par intervention_id/org, ORDER BY date ASC.
-    """
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Implement list_events")
+@router.get("", response_model=List[EventRead])
+def list_events(
+    intervention_id: UUID, 
+    db: Session = Depends(get_db),
+    current: dict = Depends(get_current_user)
+):
+    org = current["org"]
+    return EventService.list_events(db, intervention_id, org)
