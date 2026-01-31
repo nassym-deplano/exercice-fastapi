@@ -5,3 +5,11 @@ pydantic-settings
 sqlalchemy
 alembic
 pytest
+psycopg
+psycopg[binary]
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+pydantic[email]
+httpx
+psycopg2
